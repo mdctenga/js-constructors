@@ -115,9 +115,19 @@ function Spellcaster (name, health, mana){
    *
    * @param  {number} damage  Amount of damage to deal to the spellcaster
    */
-Spellcaster.prototype.inflictDamage = function (){
-   
-}
+Spellcaster.prototype.inflictDamage = function inflictDamage(damage){
+   if (this.health >= damage){
+      this.health = this.health - damage;
+   } else {
+      this.health = 0;
+   };
+
+   if (this.health > 0) {
+      this.isAlive = true;
+   } else {
+      this.isAlive = false;
+   };
+};
   /**
    * @method spendMana
    * 
@@ -127,6 +137,14 @@ Spellcaster.prototype.inflictDamage = function (){
    * @param  {number} cost      The amount of mana to spend.
    * @return {boolean} success  Whether mana was successfully spent.
    */
+Spellcaster.prototype.spendMana = function spendMana(cost){
+     if (this.mana >= cost){
+      this.mana = this.mana - cost;
+      return true
+   } else {
+      return false
+   }
+}
 
   /**
    * @method invoke

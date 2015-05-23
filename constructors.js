@@ -16,11 +16,7 @@ var Spell = function(name, cost, description){
    this.name = name;
    this.cost = cost;
    this.description = description;
-   this.printDetails = function printDetails(){
-      console.log(name + " " + cost +  " " + description);
-   };
    
-
     /**
    * @method printDetails
    * 
@@ -31,6 +27,9 @@ var Spell = function(name, cost, description){
    * e.g. console.log(a, b, c); <-- no commas, please use string concatenation.
    */
 
+   this.printDetails = function printDetails(){
+      console.log(name + " " + cost +  " " + description);
+   };
 };
 
 // 
@@ -115,7 +114,7 @@ function Spellcaster (name, health, mana){
    *
    * @param  {number} damage  Amount of damage to deal to the spellcaster
    */
-Spellcaster.prototype.inflictDamage = function inflictDamage(damage){
+Spellcaster.prototype.inflictDamage = function(damage){
    if (this.health >= damage){
       this.health = this.health - damage;
    } else {
@@ -137,8 +136,8 @@ Spellcaster.prototype.inflictDamage = function inflictDamage(damage){
    * @param  {number} cost      The amount of mana to spend.
    * @return {boolean} success  Whether mana was successfully spent.
    */
-Spellcaster.prototype.spendMana = function spendMana(cost){
-     if (this.mana >= cost){
+Spellcaster.prototype.spendMana = function(cost){
+   if (this.mana >= cost){
       this.mana = this.mana - cost;
       return true
    } else {
@@ -172,3 +171,55 @@ Spellcaster.prototype.spendMana = function spendMana(cost){
    * @param  {Spellcaster} target         The spell target to be inflicted.
    * @return {boolean}                    Whether the spell was successfully cast.
    */
+Spellcaster.prototype.invoke = function (spell, target){
+//    if (spell instanceof Spell !== true){
+//       return false;
+//    } else {
+//       var canCast = this.spendMana(spell.cost);
+//       if (canCast !== true){
+//          return false;
+//       } else {
+//          if (target instanceof Spellcaster !== false) {
+//             return true;
+//          } else {
+//             if (spell instanceof DamageSpell !== false) {
+//                return false;
+//             } else {
+//                return true;
+//             }
+//             // 
+//             return false;
+//          }
+//       }
+//    }
+   if (spell instanceof Spell) {
+      if (target instanceof Spellcaster) {
+         var canCast = this.spendMana(spell.cost);
+         if (canCast !== true){
+           return false;
+         } else {
+            if (spell instanceof DamageSpell){
+               target.inflictDamage(spell.damage);
+            }
+            return true;
+         }
+      } else {
+         if (spell instanceof DamageSpell) {
+            return false;
+         } else {
+            var canCast = this.spendMana(spell.cost);
+            if (canCast !== true){
+               return false;
+            } else {
+               if (spell instanceof DamageSpell){
+                  target.inflictDamage(spell.damage);
+               }
+               return true;
+            }
+         }
+      }
+   } else {
+      return false;
+   }
+}
+
